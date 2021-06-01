@@ -1,66 +1,59 @@
 const canvas = document.querySelector('#canvas1');
 const ctx = canvas.getContext('2d');
-
 canvas.style.border = '1px solid black';
-/* Varibales cuadrado  */
+
 let positionX = 450;
 let positionY = 450;
-let velocidadX = getRandomArbitrary(-3, 3);
-let velocidadY = getRandomArbitrary(-3, 3);
+let VelocityX = getRandomArbitrary(-3, 3);
+let VelocityY = getRandomArbitrary(-3, 3);
 
-/* Varibales circulo  */
 let positionXCircle = 250;
 let positionYCircle = 250;
-let velocidadXCirculo = getRandomArbitrary(-8, 8);
-let velocidadYCirculo = getRandomArbitrary(-8, 8);
-let CircleRadius = 100;
+let VelocityXCircle = getRandomArbitrary(-8, 8);
+let VelocityYCircle = getRandomArbitrary(-8, 8);
+
+function escenary(rectangle){
+    if(rectangle.positionX + 150 > canvas.width ){
+        rectangle.VelocityX = -rectangle.VelocityX;
+    }
+    if(rectangle.positionX < 0){
+        rectangle.VelocityX = -rectangle.VelocityX;
+    }
+
+    if(rectangle.positionY + 150 > canvas.height ){
+        rectangle.VelocityY = -rectangle.VelocityY;
+    }
+    if(rectangle.positionY < 0){
+        rectangle.VelocityY = -rectangle.VelocityY;
+    }
+
+}
 
 function animation2D(){
-    /*Este es el rectangulo */
-    ctx.fillStyle = "blue";
-    let square = ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillRect(positionX,positionY,150,150);
-    /*Este es el circulo */
-    ctx.beginPath();
-    ctx.fillStyle = "red";
-    let circle = ctx.arc(positionXCircle,positionYCircle, CircleRadius, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.closePath();
-    /*Posiciones cuadradas  */
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const rectangle = new mesuresSquare (positionX,positionY,VelocityX,VelocityY);
+    const circle = new measuresCircle (positionXCircle,positionYCircle,VelocityXCircle,VelocityYCircle);
+    rectangle.drawSquare();
+    circle.drawCircle();
 
-    if(positionX + 150 > canvas.width ){
-        velocidadX = -velocidadX;
-    }
-    if(positionX < 0){
-        velocidadX = -velocidadX;
-    }
-
-    if(positionY + 150 > canvas.height ){
-        velocidadY = -velocidadY;
-    }
-    if(positionY < 0){
-        velocidadY = -velocidadY;
-    }
+    escenary(rectangle);
 
 
-    /*Posiciones circulares  */
-
-    if(positionXCircle - CircleRadius  <= 0 ){
-        velocidadXCirculo = -velocidadXCirculo; /*Como la posicion ya esta en -0.algo osea en negativo es por eso que se pone el negativo para que negativo mas negativo positivo */
+    if(positionXCircle - 100  <= 0 ){
+        VelocityXCircle = -VelocityXCircle; 
     }
 
-    if(positionXCircle + CircleRadius > canvas.width){
-        velocidadXCirculo = -velocidadXCirculo; 
+    if(positionXCircle + 100 > canvas.width){
+        VelocityXCircle = -VelocityXCircle; 
     }
 
-    if(positionYCircle - CircleRadius  <= 0){
-        velocidadYCirculo = -velocidadYCirculo;
+    if(positionYCircle - 100  <= 0){
+        VelocityYCircle = -VelocityYCircle;
     }
 
-    if(positionYCircle + CircleRadius > canvas.height ){
-        velocidadYCirculo = -velocidadYCirculo;
+    if(positionYCircle + 100 > canvas.height ){
+        VelocityYCircle = -VelocityYCircle;
     }
-    /*Collision detected */
     
     let edgeX =  positionXCircle;
     let edgeY = positionYCircle;
@@ -82,29 +75,60 @@ function animation2D(){
     const distY  = positionYCircle - edgeY;
     const distance = Math.sqrt((distX*distX) + (distY*distY));
 
-    if(distance <=100){
+    if(distance <= 100){
         if(Math.abs(distX)<= 100 && Math.abs(distX) > 75){
-            velocidadX = -velocidadX;
-            velocidadXCirculo = -velocidadXCirculo
+            VelocityX = -VelocityX;
+            VelocityXCircle = -VelocityXCircle
         }
         if(Math.abs(distY)<=100 && Math.abs(distY) > 75 ){
-            velocidadY = - velocidadY
-            velocidadYCirculo = -velocidadYCirculo
+            VelocityY = - VelocityY
+            VelocityYCircle = -VelocityYCircle
         }
     }
 
-    /*Collision end */
-
-   /*Este es el rectangulo */
-    positionX += velocidadX;
-    positionY += velocidadY;
-    /*Este es el circulo */
-    positionXCircle += velocidadXCirculo;
-    positionYCircle += velocidadYCirculo;
+    positionX += VelocityX;
+    positionY += VelocityY;
+    positionXCircle += VelocityXCircle;
+    positionYCircle += VelocityYCircle;
 
     window.requestAnimationFrame(animation2D);
 }
+
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 window.requestAnimationFrame(animation2D);
+
+
+
+class mesuresSquare{
+    constructor(positionX,positionY,VelocityX,VelocityY){
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.VelocityX = VelocityX;
+        this.VelocityY = VelocityY;
+    }
+    drawSquare(){
+        ctx.fillStyle = "blue"; 
+        ctx.fillRect(this.positionX,this.positionY,150,150);
+    }
+}
+
+class measuresCircle{
+    constructor(positionXCircle,positionYCircle,VelocityXCircle,VelocityYCircle){
+        this.positionX = positionXCircle;
+        this.positionY = positionYCircle;
+        this.VelocityX = VelocityXCircle;
+        this.VelocityY = VelocityYCircle;
+    }
+    drawCircle(){
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.arc(positionXCircle,positionYCircle, 100, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
+
+
