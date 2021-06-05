@@ -77,7 +77,7 @@ function init (){
 
     function animation2D(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
-        const rectangle = new mesuresSquare (positionX,positionY,VelocityX,VelocityY);
+        const rectangle = new measuresSquare (positionX,positionY,VelocityX,VelocityY);
         const circle = new measuresCircle (positionXCircle,positionYCircle,VelocityXCircle,VelocityYCircle);
         rectangle.drawSquare();
         circle.drawCircle();        
@@ -97,7 +97,7 @@ function init (){
     
     window.requestAnimationFrame(animation2D);
     
-    class mesuresSquare{
+    class measuresSquare{
         constructor(positionX,positionY,VelocityX,VelocityY){
             this.positionX = positionX;
             this.positionY = positionY;
@@ -126,6 +126,7 @@ function init (){
         }
     }
 }
+
 init();
 
 
